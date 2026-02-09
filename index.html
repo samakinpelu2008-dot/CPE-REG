@@ -137,7 +137,21 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-function send() {
+function addTyping() {
+  const div = document.createElement("div");
+  div.className = "message bot";
+  div.id = "typing";
+  div.textContent = "Thinking…";
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
+}
+
+async function send() {
   const text = textInput.value.trim();
   const image = imageInput.files[0];
 
@@ -149,14 +163,39 @@ function send() {
   textInput.value = "";
   imageInput.value = "";
 
-  setTimeout(() => {
-    addMessage(
-      "I can read maths expressions and images. Once connected to the backend, I will solve and explain step by step.",
-      "bot"
-    );
-  }, 800);
+  addTyping();
+
+  try {
+    let response;
+
+    if (image) {
+      // IMAGE + TEXT
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("message", text);
+
+      response = await fetch("http://localhost:3000/image-chat", {
+        method: "POST",
+        body: formData
+      });
+    } else {
+      // TEXT ONLY
+      response = await fetch("http://localhost:3000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+    }
+
+    const data = await response.json();
+    removeTyping();
+    addMessage(data.reply, "bot");
+
+  } catch (err) {
+    removeTyping();
+    addMessage("⚠️ Error connecting to server.", "bot");
+  }
 }
 </script>
-
 </body>
 </html>
