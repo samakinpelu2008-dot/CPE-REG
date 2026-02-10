@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Football Match Simulation</title>
+<title>Manchester United vs Manchester City Simulation</title>
 <style>
     body, html {
         margin: 0;
         padding: 0;
         font-family: sans-serif;
-        background: #000;
-        color: #fff;
         height: 100vh;
+        background: black;
         overflow: hidden;
     }
+
+    /* Video background placeholder */
     #video-layer {
         width: 100%;
         height: 100%;
         background: url('https://images.unsplash.com/photo-1595433562696-65a45f27a8b8?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
         position: relative;
     }
+
+    /* Scoreboard */
     #scoreboard {
         position: absolute;
         top: 20px;
@@ -28,67 +31,83 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0,0,0,0.7);
         padding: 10px 20px;
         border-radius: 10px;
+        color: #fff;
         font-size: 24px;
+        z-index: 10;
     }
+
     #scoreboard .team {
         display: flex;
         align-items: center;
         gap: 10px;
     }
+
     #scoreboard .team-logo {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         background: #fff;
     }
+
     #scoreboard .score {
         font-size: 32px;
         margin: 0 20px;
     }
+
+    /* Timer */
     #timer {
         position: absolute;
         top: 70px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 28px;
+        z-index: 10;
+        background: rgba(0,0,0,0.6);
+        padding: 5px 15px;
+        border-radius: 5px;
     }
-    /* Sliding bar animation for events */
+
+    /* Event sliding bars */
     .event-bar {
         position: absolute;
         height: 40px;
         top: 120px;
-        left: 0;
+        left: -100%;
         display: flex;
         align-items: center;
-        padding: 0 10px;
+        padding: 0 15px;
         color: #fff;
         border-radius: 5px;
         font-size: 18px;
         opacity: 0;
-        transition: left 2s ease, opacity 0.5s ease;
+        transition: left 1.5s ease, opacity 0.5s ease;
+        z-index: 10;
     }
-    .show-bar {
-        opacity: 1;
-    }
+    .show-bar { opacity: 1; }
+
+    /* Full screen overlay for events */
     #overlay-full {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         background: rgba(0,0,0,0.7);
-        padding: 20px 40px;
+        padding: 20px 50px;
         border-radius: 15px;
         display: none;
         flex-direction: column;
         align-items: center;
+        color: #fff;
+        z-index: 15;
     }
     #overlay-full img {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         margin-bottom: 10px;
+        border-radius: 50%;
     }
 </style>
 </head>
@@ -99,12 +118,12 @@
     <div id="scoreboard">
         <div class="team" id="team1">
             <div class="team-logo" style="background:red;"></div>
-            <div id="team1-name-short">TEAM A</div>
+            <div id="team1-name-short">MUN</div>
         </div>
         <div class="score" id="score">0 - 0</div>
         <div class="team" id="team2">
             <div class="team-logo" style="background:blue;"></div>
-            <div id="team2-name-short">TEAM B</div>
+            <div id="team2-name-short">MCI</div>
         </div>
     </div>
 
@@ -114,8 +133,8 @@
     <!-- Event bar -->
     <div id="event-bar" class="event-bar"></div>
 
-    <!-- Full name/logo overlay -->
-    <div id="overlay-full" class="overlay-full">
+    <!-- Full overlay for key moments -->
+    <div id="overlay-full">
         <img id="overlay-logo" src="">
         <div id="overlay-name" style="font-size:28px;"></div>
     </div>
@@ -132,14 +151,14 @@ let score2 = 0;
 function startTimer() {
     timerInterval = setInterval(() => {
         matchSeconds++;
-        if (matchSeconds >= 60) {
+        if(matchSeconds >= 60) {
             matchSeconds = 0;
             matchMinutes++;
         }
-        document.getElementById('timer').textContent = 
-            (matchMinutes < 10 ? '0'+matchMinutes : matchMinutes) + ':' +
-            (matchSeconds < 10 ? '0'+matchSeconds : matchSeconds);
-    }, 1000);
+        document.getElementById('timer').textContent =
+            (matchMinutes<10 ? '0'+matchMinutes : matchMinutes) + ':' +
+            (matchSeconds<10 ? '0'+matchSeconds : matchSeconds);
+    },1000);
 }
 
 // Show sliding event bar
@@ -149,42 +168,49 @@ function showEvent(type, teamColor, player, time) {
     bar.textContent = `${type} - ${player} (${time})`;
     bar.style.left = '-100%';
     bar.classList.add('show-bar');
-    setTimeout(() => { bar.style.left = '10px'; }, 50);
-    setTimeout(() => { bar.style.left = '100%'; bar.classList.remove('show-bar'); }, 5000);
+    setTimeout(()=>{ bar.style.left = '10px'; },50);
+    setTimeout(()=>{ bar.style.left = '100%'; bar.classList.remove('show-bar'); },5000);
 }
 
-// Show full name/logo overlay
+// Show full-screen overlay
 function showOverlay(name, logoUrl) {
     const overlay = document.getElementById('overlay-full');
     document.getElementById('overlay-name').textContent = name;
     document.getElementById('overlay-logo').src = logoUrl;
     overlay.style.display = 'flex';
-    setTimeout(() => { overlay.style.display = 'none'; }, 5000);
+    setTimeout(()=>{ overlay.style.display = 'none'; },5000);
 }
 
-// Sequence simulation
+// Simulate events based on your YouTube match
 startTimer();
 
-// 30s: Goal by TEAM A
-setTimeout(() => {
+// 30s: Goal MUN
+setTimeout(()=>{
     score1++;
     document.getElementById('score').textContent = `${score1} - ${score2}`;
-    showEvent('GOAL', 'red', 'Ish', '00:30');
-    showOverlay('TEAM A', 'https://via.placeholder.com/80/FF0000/FFFFFF?text=A');
-}, 30000);
+    showEvent('GOAL', 'red', 'Rashford', '00:30');
+    showOverlay('Manchester United', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg');
+},30000);
 
-// 60s: Yellow card TEAM B
-setTimeout(() => {
-    showEvent('YELLOW CARD', 'blue', 'Player B', '01:00');
-    showOverlay('TEAM B', 'https://via.placeholder.com/80/0000FF/FFFFFF?text=B');
-}, 60000);
+// 60s: Yellow card MCI
+setTimeout(()=>{
+    showEvent('YELLOW CARD', 'blue', 'De Bruyne', '01:00');
+    showOverlay('Manchester City', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg');
+},60000);
 
-// 90s: Red card TEAM A
-setTimeout(() => {
-    showEvent('RED CARD', 'red', 'Player C', '01:30');
-    showOverlay('TEAM A', 'https://via.placeholder.com/80/FF0000/FFFFFF?text=A');
-}, 90000);
+// 90s: Goal MCI
+setTimeout(()=>{
+    score2++;
+    document.getElementById('score').textContent = `${score1} - ${score2}`;
+    showEvent('GOAL', 'blue', 'Foden', '01:30');
+    showOverlay('Manchester City', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg');
+},90000);
 
+// 120s: Red card MUN
+setTimeout(()=>{
+    showEvent('RED CARD', 'red', 'Martial', '02:00');
+    showOverlay('Manchester United', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg');
+},120000);
 </script>
 
 </body>
