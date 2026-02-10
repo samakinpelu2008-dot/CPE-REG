@@ -2,200 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduGPT</title>
-
+<title>Football Match Simulation</title>
 <style>
-* {
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-body {
-  margin: 0;
-  background: #f7f7f8;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-}
-
-.app {
-  width: 100%;
-  max-width: 800px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-}
-
-.header {
-  padding: 14px 20px;
-  border-bottom: 1px solid #e5e5e5;
-  font-weight: 600;
-}
-
-.messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.message {
-  max-width: 70%;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  line-height: 1.5;
-  font-size: 15px;
-  border-radius: 12px;
-  white-space: pre-wrap;
-}
-
-.user {
-  background: #eaeaea;
-  margin-left: auto;
-  border-bottom-right-radius: 4px;
-}
-
-.bot {
-  background: #f1f1f1;
-  margin-right: auto;
-  border-bottom-left-radius: 4px;
-}
-
-.input-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px;
-  border-top: 1px solid #e5e5e5;
-}
-
-.input-bar input[type="text"] {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #d0d0d0;
-  font-size: 15px;
-  outline: none;
-}
-
-.input-bar input[type="file"] {
-  display: none;
-}
-
-.icon-btn {
-  cursor: pointer;
-  font-size: 18px;
-  padding: 6px;
-}
-
-.send-btn {
-  background: #111827;
-  color: #fff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background: #000;
+        color: #fff;
+        height: 100vh;
+        overflow: hidden;
+    }
+    #video-layer {
+        width: 100%;
+        height: 100%;
+        background: url('https://images.unsplash.com/photo-1595433562696-65a45f27a8b8?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+        position: relative;
+    }
+    #scoreboard {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0,0,0,0.6);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 24px;
+    }
+    #scoreboard .team {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    #scoreboard .team-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+    }
+    #scoreboard .score {
+        font-size: 32px;
+        margin: 0 20px;
+    }
+    #timer {
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 28px;
+    }
+    /* Sliding bar animation for events */
+    .event-bar {
+        position: absolute;
+        height: 40px;
+        top: 120px;
+        left: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 18px;
+        opacity: 0;
+        transition: left 2s ease, opacity 0.5s ease;
+    }
+    .show-bar {
+        opacity: 1;
+    }
+    #overlay-full {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.7);
+        padding: 20px 40px;
+        border-radius: 15px;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+    }
+    #overlay-full img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
 </style>
 </head>
-
 <body>
 
-<div class="app">
-  <div class="header">EduGPT — AI Tutor</div>
-
-  <div class="messages" id="messages">
-    <div class="message bot">
-      Hi 👋  
-      You can ask maths questions or upload an image of a question.
+<div id="video-layer">
+    <!-- Scoreboard -->
+    <div id="scoreboard">
+        <div class="team" id="team1">
+            <div class="team-logo" style="background:red;"></div>
+            <div id="team1-name-short">TEAM A</div>
+        </div>
+        <div class="score" id="score">0 - 0</div>
+        <div class="team" id="team2">
+            <div class="team-logo" style="background:blue;"></div>
+            <div id="team2-name-short">TEAM B</div>
+        </div>
     </div>
-  </div>
 
-  <div class="input-bar">
-    <label class="icon-btn">
-      📎
-      <input type="file" id="imageInput" accept="image/*">
-    </label>
+    <!-- Timer -->
+    <div id="timer">00:00</div>
 
-    <input type="text" id="textInput" placeholder="Ask a maths question… e.g. log⁴3">
+    <!-- Event bar -->
+    <div id="event-bar" class="event-bar"></div>
 
-    <button class="send-btn" onclick="send()">Send</button>
-  </div>
+    <!-- Full name/logo overlay -->
+    <div id="overlay-full" class="overlay-full">
+        <img id="overlay-logo" src="">
+        <div id="overlay-name" style="font-size:28px;"></div>
+    </div>
 </div>
 
 <script>
-const messages = document.getElementById("messages");
-const textInput = document.getElementById("textInput");
-const imageInput = document.getElementById("imageInput");
+let matchMinutes = 0;
+let matchSeconds = 0;
+let timerInterval;
+let score1 = 0;
+let score2 = 0;
 
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = "message " + type;
-  div.textContent = text;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+// Start match timer
+function startTimer() {
+    timerInterval = setInterval(() => {
+        matchSeconds++;
+        if (matchSeconds >= 60) {
+            matchSeconds = 0;
+            matchMinutes++;
+        }
+        document.getElementById('timer').textContent = 
+            (matchMinutes < 10 ? '0'+matchMinutes : matchMinutes) + ':' +
+            (matchSeconds < 10 ? '0'+matchSeconds : matchSeconds);
+    }, 1000);
 }
 
-function addTyping() {
-  const div = document.createElement("div");
-  div.className = "message bot";
-  div.id = "typing";
-  div.textContent = "Thinking…";
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+// Show sliding event bar
+function showEvent(type, teamColor, player, time) {
+    const bar = document.getElementById('event-bar');
+    bar.style.background = teamColor;
+    bar.textContent = `${type} - ${player} (${time})`;
+    bar.style.left = '-100%';
+    bar.classList.add('show-bar');
+    setTimeout(() => { bar.style.left = '10px'; }, 50);
+    setTimeout(() => { bar.style.left = '100%'; bar.classList.remove('show-bar'); }, 5000);
 }
 
-function removeTyping() {
-  const t = document.getElementById("typing");
-  if (t) t.remove();
+// Show full name/logo overlay
+function showOverlay(name, logoUrl) {
+    const overlay = document.getElementById('overlay-full');
+    document.getElementById('overlay-name').textContent = name;
+    document.getElementById('overlay-logo').src = logoUrl;
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.style.display = 'none'; }, 5000);
 }
 
-async function send() {
-  const text = textInput.value.trim();
-  const image = imageInput.files[0];
+// Sequence simulation
+startTimer();
 
-  if (!text && !image) return;
+// 30s: Goal by TEAM A
+setTimeout(() => {
+    score1++;
+    document.getElementById('score').textContent = `${score1} - ${score2}`;
+    showEvent('GOAL', 'red', 'Ish', '00:30');
+    showOverlay('TEAM A', 'https://via.placeholder.com/80/FF0000/FFFFFF?text=A');
+}, 30000);
 
-  if (text) addMessage(text, "user");
-  if (image) addMessage("[Image uploaded]", "user");
+// 60s: Yellow card TEAM B
+setTimeout(() => {
+    showEvent('YELLOW CARD', 'blue', 'Player B', '01:00');
+    showOverlay('TEAM B', 'https://via.placeholder.com/80/0000FF/FFFFFF?text=B');
+}, 60000);
 
-  textInput.value = "";
-  imageInput.value = "";
+// 90s: Red card TEAM A
+setTimeout(() => {
+    showEvent('RED CARD', 'red', 'Player C', '01:30');
+    showOverlay('TEAM A', 'https://via.placeholder.com/80/FF0000/FFFFFF?text=A');
+}, 90000);
 
-  addTyping();
-
-  try {
-    let response;
-
-    if (image) {
-      // IMAGE + TEXT
-      const formData = new FormData();
-      formData.append("image", image);
-      formData.append("message", text);
-
-      response = await fetch("http://localhost:3000/image-chat", {
-        method: "POST",
-        body: formData
-      });
-    } else {
-      // TEXT ONLY
-      response = await fetch("http://localhost:3000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-      });
-    }
-
-    const data = await response.json();
-    removeTyping();
-    addMessage(data.reply, "bot");
-
-  } catch (err) {
-    removeTyping();
-    addMessage("⚠️ Error connecting to server.", "bot");
-  }
-}
 </script>
+
 </body>
 </html>
