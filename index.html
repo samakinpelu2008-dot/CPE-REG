@@ -1,223 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Manchester United vs Manchester City Simulation</title>
-<style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-        height: 100vh;
-        background: black;
-        overflow: hidden;
-    }
+  <title>HistoryHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    /* Video iframe fills the screen */
-    #video-layer iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-    }
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-    /* Scoreboard */
-    #scoreboard {
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(0,0,0,0.7);
-        padding: 10px 20px;
-        border-radius: 10px;
-        color: #fff;
-        font-size: 24px;
-        z-index: 10;
-    }
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 
-    #scoreboard .team {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    #scoreboard .team-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #fff;
-    }
-
-    #scoreboard .score {
-        font-size: 32px;
-        margin: 0 20px;
-    }
-
-    /* Timer */
-    #timer {
-        position: absolute;
-        top: 70px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 28px;
-        z-index: 10;
-        background: rgba(0,0,0,0.6);
-        padding: 5px 15px;
-        border-radius: 5px;
-    }
-
-    /* Event sliding bars */
-    .event-bar {
-        position: absolute;
-        height: 40px;
-        top: 120px;
-        left: -100%;
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
-        color: #fff;
-        border-radius: 5px;
-        font-size: 18px;
-        opacity: 0;
-        transition: left 1.5s ease, opacity 0.5s ease;
-        z-index: 10;
-    }
-    .show-bar { opacity: 1; }
-
-    /* Full screen overlay for events */
-    #overlay-full {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0,0,0,0.7);
-        padding: 20px 50px;
-        border-radius: 15px;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        color: #fff;
-        z-index: 15;
-    }
-    #overlay-full img {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 10px;
-        border-radius: 50%;
-    }
-</style>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 20px; }
+    .card { padding: 15px; border: 1px solid #ddd; margin: 10px 0; border-radius: 8px; }
+    .hidden { display: none; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; }
+    .profile { width: 40px; height: 40px; border-radius: 50%; background: black; color: white; display:flex; align-items:center; justify-content:center; font-weight:bold; }
+    button { padding: 10px; border-radius: 6px; border: none; cursor: pointer; }
+    .blue { background: blue; color: white; }
+  </style>
 </head>
 <body>
 
-<div id="video-layer">
-    <!-- YouTube video embed -->
-    <iframe 
-        src="https://www.youtube.com/embed/dMGsqhl1BbM?autoplay=1&controls=0&rel=0&modestbranding=1" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-    </iframe>
-
-    <!-- Scoreboard -->
-    <div id="scoreboard">
-        <div class="team" id="team1">
-            <div class="team-logo" style="background:red;"></div>
-            <div id="team1-name-short">MUN</div>
-        </div>
-        <div class="score" id="score">0 - 0</div>
-        <div class="team" id="team2">
-            <div class="team-logo" style="background:blue;"></div>
-            <div id="team2-name-short">MCI</div>
-        </div>
-    </div>
-
-    <!-- Timer -->
-    <div id="timer">00:00</div>
-
-    <!-- Event bar -->
-    <div id="event-bar" class="event-bar"></div>
-
-    <!-- Full overlay for key moments -->
-    <div id="overlay-full">
-        <img id="overlay-logo" src="">
-        <div id="overlay-name" style="font-size:28px;"></div>
-    </div>
+<div class="topbar">
+  <h2>HistoryHub</h2>
+  <div id="profile" class="profile hidden"></div>
 </div>
 
-<script>
-let matchMinutes = 0;
-let matchSeconds = 0;
-let timerInterval;
-let score1 = 0;
-let score2 = 0;
+<input type="text" id="search" placeholder="Search books..." />
 
-// Start match timer
-function startTimer() {
-    timerInterval = setInterval(() => {
-        matchSeconds++;
-        if(matchSeconds >= 60) {
-            matchSeconds = 0;
-            matchMinutes++;
-        }
-        document.getElementById('timer').textContent =
-            (matchMinutes<10 ? '0'+matchMinutes : matchMinutes) + ':' +
-            (matchSeconds<10 ? '0'+matchSeconds : matchSeconds);
-    },1000);
+<div id="books"></div>
+
+<button id="loginBtn" class="blue">Sign in with Google</button>
+
+<script type="module">
+
+// Firebase Modular CDN version
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD0P7scCvlcPPPIACYE1nS4-Gmy27ophuM",
+  authDomain: "historyhub-4cfda.firebaseapp.com",
+  projectId: "historyhub-4cfda",
+  storageBucket: "historyhub-4cfda.firebasestorage.app",
+  messagingSenderId: "422922716352",
+  appId: "1:422922716352:web:178b0a0f81d6bd94829925"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const loginBtn = document.getElementById("loginBtn");
+const profileDiv = document.getElementById("profile");
+const booksDiv = document.getElementById("books");
+
+const provider = new GoogleAuthProvider();
+
+loginBtn.onclick = () => {
+  signInWithPopup(auth, provider);
+};
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginBtn.style.display = "none";
+    profileDiv.classList.remove("hidden");
+    profileDiv.innerText = user.displayName.charAt(0).toUpperCase();
+  }
+});
+
+async function loadBooks() {
+  const querySnapshot = await getDocs(collection(db, "books"));
+  booksDiv.innerHTML = "";
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    booksDiv.innerHTML += `
+      <div class="card">
+        <h3>${data.title}</h3>
+        <p>${data.category}</p>
+      </div>
+    `;
+  });
 }
 
-// Show sliding event bar
-function showEvent(type, teamColor, player, time) {
-    const bar = document.getElementById('event-bar');
-    bar.style.background = teamColor;
-    bar.textContent = `${type} - ${player} (${time})`;
-    bar.style.left = '-100%';
-    bar.classList.add('show-bar');
-    setTimeout(()=>{ bar.style.left = '10px'; },50);
-    setTimeout(()=>{ bar.style.left = '100%'; bar.classList.remove('show-bar'); },5000);
-}
-
-// Show full-screen overlay
-function showOverlay(name, logoUrl) {
-    const overlay = document.getElementById('overlay-full');
-    document.getElementById('overlay-name').textContent = name;
-    document.getElementById('overlay-logo').src = logoUrl;
-    overlay.style.display = 'flex';
-    setTimeout(()=>{ overlay.style.display = 'none'; },5000);
-}
-
-// Start timer
-startTimer();
-
-// Simulated events using the YouTube match example
-setTimeout(()=>{
-    score1++;
-    document.getElementById('score').textContent = `${score1} - ${score2}`;
-    showEvent('GOAL', 'red', 'Rashford', '00:30');
-    showOverlay('Manchester United', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg');
-},30000);
-
-setTimeout(()=>{
-    showEvent('YELLOW CARD', 'blue', 'De Bruyne', '01:00');
-    showOverlay('Manchester City', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg');
-},60000);
-
-setTimeout(()=>{
-    score2++;
-    document.getElementById('score').textContent = `${score1} - ${score2}`;
-    showEvent('GOAL', 'blue', 'Foden', '01:30');
-    showOverlay('Manchester City', 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg');
-},90000);
-
-setTimeout(()=>{
-    showEvent('RED CARD', 'red', 'Martial', '02:00');
-    showOverlay('Manchester United', 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg');
-},120000);
+loadBooks();
 
 </script>
 
