@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>CPE Football Team Registration Form (Girls)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,89 +9,58 @@
       font-family: Arial, sans-serif;
       background: #f4f6f9;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
 
     .container {
-      max-width: 750px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.08);
+      max-width: 600px;
+      background: white;
+      padding: 25px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h1 {
       text-align: center;
-      color: #1e2a38;
-      margin-bottom: 5px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #666;
-      font-weight: normal;
-      font-size: 16px;
-      margin-top: 0;
+      color: #2c3e50;
     }
 
     label {
-      display: block;
-      margin-top: 18px;
       font-weight: bold;
-      font-size: 14px;
+      display: block;
+      margin-top: 15px;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="number"],
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 6px;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 4px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
       font-size: 14px;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    .radio-group,
-    .checkbox-group {
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    input[type="radio"],
-    input[type="checkbox"] {
-      margin-right: 6px;
-    }
-
-    .optional {
-      font-weight: normal;
-      font-style: italic;
-      color: #888;
-      font-size: 12px;
     }
 
     button {
-      margin-top: 25px;
-      width: 100%;
+      margin-top: 20px;
       padding: 12px;
-      background: #1e2a38;
+      width: 100%;
+      background: #2c3e50;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
     }
 
     button:hover {
-      background: #2f3f52;
+      background: #1a252f;
+    }
+
+    .success {
+      margin-top: 15px;
+      color: green;
+      text-align: center;
     }
   </style>
 </head>
@@ -100,110 +68,107 @@
 <body>
 
 <div class="container">
-  <h1>CP Football Team Registration Form</h1>
-  <h2>(Girls)</h2>
+  <h1>CPE Football Team Registration Form (Girls)</h1>
 
   <form id="registrationForm">
 
-    <label>1. Full Name *</label>
-    <input type="text" name="fullname" required>
+    <!-- Mandatory -->
+    <label>Full Name *</label>
+    <input type="text" id="fullname" required>
 
-    <label>2. Nickname <span class="optional">(Optional)</span></label>
-    <input type="text" name="nickname">
+    <!-- Optional -->
+    <label>Nickname (Optional)</label>
+    <input type="text" id="nickname">
 
-    <label>3. Age *</label>
-    <input type="number" name="age" required>
+    <!-- Mandatory -->
+    <label>Age *</label>
+    <input type="number" id="age" required>
 
-    <label>4. Phone Number *</label>
-    <input type="text" name="phone" required>
+    <!-- Mandatory -->
+    <label>Phone Number *</label>
+    <input type="text" id="phone" required>
 
-    <label>5. Email Address <span class="optional">(Optional but advised)</span></label>
-    <input type="email" name="email">
+    <!-- Optional but advised -->
+    <label>Email Address (Optional but advised)</label>
+    <input type="email" id="email">
 
-    <label>6. Preferred Position *</label>
-    <select name="position" required>
-      <option value="">Select Position</option>
-      <option>Goalkeeper</option>
-      <option>Center Back</option>
-      <option>Right Back</option>
-      <option>Left Back</option>
-      <option>Defensive Midfielder</option>
-      <option>Central Midfielder</option>
-      <option>Attacking Midfielder</option>
-      <option>Right Wing</option>
-      <option>Left Wing</option>
-      <option>Striker</option>
+    <!-- Mandatory -->
+    <label>Preferred Position *</label>
+    <input type="text" id="position" required>
+
+    <!-- Mandatory -->
+    <label>Secondary Position *</label>
+    <input type="text" id="secondaryPosition" required>
+
+    <!-- Mandatory -->
+    <label>Dominant Foot *</label>
+    <select id="foot" required>
+      <option value="">Select</option>
+      <option>Right</option>
+      <option>Left</option>
+      <option>Both</option>
     </select>
 
-    <label>7. Secondary Position *</label>
-    <select name="secondaryPosition" required>
-      <option value="">Select Position</option>
-      <option>Goalkeeper</option>
-      <option>Center Back</option>
-      <option>Right Back</option>
-      <option>Left Back</option>
-      <option>Defensive Midfielder</option>
-      <option>Central Midfielder</option>
-      <option>Attacking Midfielder</option>
-      <option>Right Wing</option>
-      <option>Left Wing</option>
-      <option>Striker</option>
+    <!-- Mandatory -->
+    <label>Height *</label>
+    <select id="height" required>
+      <option value="">Select</option>
+      <option>Tall</option>
+      <option>Medium</option>
+      <option>Short</option>
     </select>
 
-    <label>8. Dominant Foot *</label>
-    <div class="radio-group">
-      <input type="radio" name="foot" value="Right" required> Right
-      <input type="radio" name="foot" value="Left"> Left
-      <input type="radio" name="foot" value="Both"> Both
-    </div>
+    <!-- Optional -->
+    <label>Weight (Optional)</label>
+    <input type="number" id="weight">
 
-    <label>9. Height *</label>
-    <div class="radio-group">
-      <input type="radio" name="height" value="Short" required> Short
-      <input type="radio" name="height" value="Medium"> Medium
-      <input type="radio" name="height" value="Tall"> Tall
-    </div>
+    <!-- Optional -->
+    <label>Preferred Jersey Number (Optional)</label>
+    <input type="number" id="jersey">
 
-    <label>10. Weight <span class="optional">(Optional)</span></label>
-    <input type="number" name="weight">
+    <!-- Optional -->
+    <label>Years of Playing Experience (Optional)</label>
+    <input type="number" id="experience">
 
-    <label>11. Jersey Number Preference <span class="optional">(Optional)</span></label>
-    <input type="number" name="jerseyNumber">
+    <!-- Mandatory -->
+    <label>Available for Weekly Training? *</label>
+    <select id="weeklyTraining" required>
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
 
-    <label>12. Years of Playing Experience <span class="optional">(Optional)</span></label>
-    <input type="number" name="experience">
+    <!-- Mandatory -->
+    <label>Available for Weekend Matches? *</label>
+    <select id="weekendMatches" required>
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
 
-    <label>13. Are you available for weekly training? *</label>
-    <div class="radio-group">
-      <input type="radio" name="weeklyTraining" value="Yes" required> Yes
-      <input type="radio" name="weeklyTraining" value="No"> No
-    </div>
+    <!-- Mandatory -->
+    <label>Why do you want to join the team? *</label>
+    <textarea id="reason" rows="4" required></textarea>
 
-    <label>14. Are you available for weekend matches? *</label>
-    <div class="radio-group">
-      <input type="radio" name="weekendMatches" value="Yes" required> Yes
-      <input type="radio" name="weekendMatches" value="No"> No
-    </div>
+    <!-- Mandatory -->
+    <label>
+      <input type="checkbox" id="confirmInfo" required>
+      I confirm that all the information provided is true *
+    </label>
 
-    <label>15. Why do you want to join the team? *</label>
-    <textarea name="reason" rows="4" required></textarea>
+    <label>
+      <input type="checkbox" id="agreeRules" required>
+      I agree to follow team rules and regulations *
+    </label>
 
-    <label>16. I confirm all information provided is correct *</label>
-    <div class="checkbox-group">
-      <input type="checkbox" name="confirm" required> I Confirm
-    </div>
-
-    <label>17. I agree to follow team rules and disciplinary actions *</label>
-    <div class="checkbox-group">
-      <input type="checkbox" name="rules" required> I Agree
-    </div>
-
-    <label>18. I agree to take financial responsibility for team dues, kits, fines, and contributions *</label>
-    <div class="checkbox-group">
-      <input type="checkbox" name="financial" required> I Agree
-    </div>
+    <label>
+      <input type="checkbox" id="financialResponsibility" required>
+      I agree to take financial responsibility for team dues, kit, fines, and agreed contributions *
+    </label>
 
     <button type="submit">Submit Registration</button>
+
+    <div class="success" id="successMessage"></div>
 
   </form>
 </div>
@@ -231,35 +196,35 @@ const form = document.getElementById("registrationForm");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  try {
-    await addDoc(collection(db, "CP_Girls_Team_Registrations"), {
-      fullname: form.fullname.value,
-      nickname: form.nickname.value,
-      age: form.age.value,
-      phone: form.phone.value,
-      email: form.email.value,
-      position: form.position.value,
-      secondaryPosition: form.secondaryPosition.value,
-      foot: form.foot.value,
-      height: form.height.value,
-      weight: form.weight.value,
-      jerseyNumber: form.jerseyNumber.value,
-      experience: form.experience.value,
-      weeklyTraining: form.weeklyTraining.value,
-      weekendMatches: form.weekendMatches.value,
-      reason: form.reason.value,
-      timestamp: new Date()
-    });
+  await addDoc(collection(db, "CP_Girls_Team_Registrations"), {
+    fullname: document.getElementById("fullname").value,
+    nickname: document.getElementById("nickname").value,
+    age: document.getElementById("age").value,
+    phone: document.getElementById("phone").value,
+    email: document.getElementById("email").value,
+    position: document.getElementById("position").value,
+    secondaryPosition: document.getElementById("secondaryPosition").value,
+    foot: document.getElementById("foot").value,
+    height: document.getElementById("height").value,
+    weight: document.getElementById("weight").value,
+    jersey: document.getElementById("jersey").value,
+    experience: document.getElementById("experience").value,
+    weeklyTraining: document.getElementById("weeklyTraining").value,
+    weekendMatches: document.getElementById("weekendMatches").value,
+    reason: document.getElementById("reason").value,
+    confirmInfo: document.getElementById("confirmInfo").checked,
+    agreeRules: document.getElementById("agreeRules").checked,
+    financialResponsibility: document.getElementById("financialResponsibility").checked,
+    createdAt: new Date()
+  });
 
-    alert("Registration submitted successfully!");
-    form.reset();
+  document.getElementById("successMessage").innerText =
+    "Registration submitted successfully!";
 
-  } catch (error) {
-    alert("Error: " + error.message);
-  }
+  form.reset();
 });
 
 </script>
 
 </body>
-      </html>
+  </html>
