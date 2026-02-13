@@ -1,98 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>CPE Football Team Registration Form (Girls)</title>
+  <title>CP Girls Team Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; background:#f4f6f9; margin:0; padding:20px; }
-    .container { max-width:600px; background:white; padding:25px; margin:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
-    h1 { text-align:center; color:#2c3e50; }
-    label { font-weight:bold; display:block; margin-top:15px; }
-    input, select, textarea { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; font-size:14px; }
-    button { margin-top:20px; padding:12px; width:100%; background:#2c3e50; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer; }
-    button:hover { background:#1a252f; }
-    .success { margin-top:15px; color:green; text-align:center; }
+    body {
+      font-family: Arial;
+      background: #f4f6f9;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: gray;
+    }
   </style>
 </head>
-
 <body>
-<div class="container">
-  <h1>CPE Football Team Registration Form (Girls)</h1>
-  <form id="registrationForm">
 
-    <label>Full Name *</label>
-    <input type="text" id="fullname" required>
+<h1>CP Girls Team Registration</h1>
 
-    <label>Nickname (Optional)</label>
-    <input type="text" id="nickname">
+<form id="registrationForm">
+  <input type="text" name="fullname" placeholder="Full Name" required>
+  <input type="number" name="age" placeholder="Age" required>
+  <input type="text" name="phone" placeholder="Phone Number" required>
+  <input type="email" name="email" placeholder="Email">
+  
+  <input type="text" name="position" placeholder="Main Position" required>
+  <input type="text" name="secondaryPosition" placeholder="Secondary Position">
 
-    <label>Age *</label>
-    <input type="number" id="age" required>
+  <select name="foot" required>
+    <option value="">Preferred Foot</option>
+    <option>Right</option>
+    <option>Left</option>
+    <option>Both</option>
+  </select>
 
-    <label>Phone Number *</label>
-    <input type="text" id="phone" required>
+  <input type="text" name="height" placeholder="Height (e.g 5'6)" required>
 
-    <label>Email Address (Optional but advised)</label>
-    <input type="email" id="email">
+  <select name="weeklyTraining" required>
+    <option value="">Can Attend Weekly Training?</option>
+    <option>Yes</option>
+    <option>No</option>
+  </select>
 
-    <label>Preferred Position *</label>
-    <input type="text" id="position" required>
+  <select name="weekendMatches" required>
+    <option value="">Available For Weekend Matches?</option>
+    <option>Yes</option>
+    <option>No</option>
+  </select>
 
-    <label>Secondary Position *</label>
-    <input type="text" id="secondaryPosition" required>
+  <textarea name="reason" placeholder="Why do you want to join?" required></textarea>
 
-    <label>Dominant Foot *</label>
-    <select id="foot" required>
-      <option value="">Select</option>
-      <option>Right</option>
-      <option>Left</option>
-      <option>Both</option>
-    </select>
-
-    <label>Height *</label>
-    <select id="height" required>
-      <option value="">Select</option>
-      <option>Tall</option>
-      <option>Medium</option>
-      <option>Short</option>
-    </select>
-
-    <label>Weight (Optional)</label>
-    <input type="number" id="weight">
-
-    <label>Preferred Jersey Number (Optional)</label>
-    <input type="number" id="jersey">
-
-    <label>Years of Playing Experience (Optional)</label>
-    <input type="number" id="experience">
-
-    <label>Available for Weekly Training? *</label>
-    <select id="weeklyTraining" required>
-      <option value="">Select</option>
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>Available for Weekend Matches? *</label>
-    <select id="weekendMatches" required>
-      <option value="">Select</option>
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>Why do you want to join the team? *</label>
-    <textarea id="reason" rows="4" required></textarea>
-
-    <label><input type="checkbox" id="confirmInfo" required> I confirm all information is correct *</label>
-    <label><input type="checkbox" id="agreeRules" required> I agree to follow team rules *</label>
-    <label><input type="checkbox" id="financialResponsibility" required> I agree to take financial responsibility *</label>
-
-    <button type="submit">Submit Registration</button>
-    <div class="success" id="successMessage"></div>
-
-  </form>
-</div>
+  <button type="submit" id="submitBtn">Submit</button>
+</form>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -111,36 +105,44 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const form = document.getElementById("registrationForm");
+const submitBtn = document.getElementById("submitBtn");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  await addDoc(collection(db, "CP_Girls_Team_Registrations"), {
-    fullname: document.getElementById("fullname").value,
-    nickname: document.getElementById("nickname").value,
-    age: document.getElementById("age").value,
-    phone: document.getElementById("phone").value,
-    email: document.getElementById("email").value,
-    position: document.getElementById("position").value,
-    secondaryPosition: document.getElementById("secondaryPosition").value,
-    foot: document.getElementById("foot").value,
-    height: document.getElementById("height").value,
-    weight: document.getElementById("weight").value,
-    jersey: document.getElementById("jersey").value,
-    experience: document.getElementById("experience").value,
-    weeklyTraining: document.getElementById("weeklyTraining").value,
-    weekendMatches: document.getElementById("weekendMatches").value,
-    reason: document.getElementById("reason").value,
-    confirmInfo: document.getElementById("confirmInfo").checked,
-    agreeRules: document.getElementById("agreeRules").checked,
-    financialResponsibility: document.getElementById("financialResponsibility").checked,
-    createdAt: new Date()
-  });
+  submitBtn.innerText = "Sending...";
+  submitBtn.disabled = true;
 
-  document.getElementById("successMessage").innerText =
-    "Registration submitted successfully!";
-  form.reset();
+  try {
+    await addDoc(collection(db, "CP_Girls_Team_Registrations"), {
+      fullname: form.fullname.value,
+      age: form.age.value,
+      phone: form.phone.value,
+      email: form.email.value,
+      position: form.position.value,
+      secondaryPosition: form.secondaryPosition.value,
+      foot: form.foot.value,
+      height: form.height.value,
+      weeklyTraining: form.weeklyTraining.value,
+      weekendMatches: form.weekendMatches.value,
+      reason: form.reason.value,
+      status: "Pending",
+      createdAt: new Date()
+    });
+
+    alert("✅ Your request has been sent successfully!");
+
+    form.reset();
+
+  } catch (error) {
+    alert("❌ Something went wrong. Check console.");
+    console.error(error);
+  }
+
+  submitBtn.innerText = "Submit";
+  submitBtn.disabled = false;
 });
 </script>
+
 </body>
 </html>
