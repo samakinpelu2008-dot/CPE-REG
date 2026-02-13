@@ -1,106 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>CPE Football Team Registration Form (Girls)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 600px;
-      background: white;
-      padding: 25px;
-      margin: auto;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      width: 100%;
-      background: #2c3e50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #1a252f;
-    }
-
-    .success {
-      margin-top: 15px;
-      color: green;
-      text-align: center;
-    }
+    body { font-family: Arial; background:#f4f6f9; margin:0; padding:20px; }
+    .container { max-width:600px; background:white; padding:25px; margin:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+    h1 { text-align:center; color:#2c3e50; }
+    label { font-weight:bold; display:block; margin-top:15px; }
+    input, select, textarea { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; font-size:14px; }
+    button { margin-top:20px; padding:12px; width:100%; background:#2c3e50; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer; }
+    button:hover { background:#1a252f; }
+    .success { margin-top:15px; color:green; text-align:center; }
   </style>
 </head>
 
 <body>
-
 <div class="container">
   <h1>CPE Football Team Registration Form (Girls)</h1>
-
   <form id="registrationForm">
 
-    <!-- Mandatory -->
     <label>Full Name *</label>
     <input type="text" id="fullname" required>
 
-    <!-- Optional -->
     <label>Nickname (Optional)</label>
     <input type="text" id="nickname">
 
-    <!-- Mandatory -->
     <label>Age *</label>
     <input type="number" id="age" required>
 
-    <!-- Mandatory -->
     <label>Phone Number *</label>
     <input type="text" id="phone" required>
 
-    <!-- Optional but advised -->
     <label>Email Address (Optional but advised)</label>
     <input type="email" id="email">
 
-    <!-- Mandatory -->
     <label>Preferred Position *</label>
     <input type="text" id="position" required>
 
-    <!-- Mandatory -->
     <label>Secondary Position *</label>
     <input type="text" id="secondaryPosition" required>
 
-    <!-- Mandatory -->
     <label>Dominant Foot *</label>
     <select id="foot" required>
       <option value="">Select</option>
@@ -109,7 +50,6 @@
       <option>Both</option>
     </select>
 
-    <!-- Mandatory -->
     <label>Height *</label>
     <select id="height" required>
       <option value="">Select</option>
@@ -118,19 +58,15 @@
       <option>Short</option>
     </select>
 
-    <!-- Optional -->
     <label>Weight (Optional)</label>
     <input type="number" id="weight">
 
-    <!-- Optional -->
     <label>Preferred Jersey Number (Optional)</label>
     <input type="number" id="jersey">
 
-    <!-- Optional -->
     <label>Years of Playing Experience (Optional)</label>
     <input type="number" id="experience">
 
-    <!-- Mandatory -->
     <label>Available for Weekly Training? *</label>
     <select id="weeklyTraining" required>
       <option value="">Select</option>
@@ -138,7 +74,6 @@
       <option>No</option>
     </select>
 
-    <!-- Mandatory -->
     <label>Available for Weekend Matches? *</label>
     <select id="weekendMatches" required>
       <option value="">Select</option>
@@ -146,36 +81,20 @@
       <option>No</option>
     </select>
 
-    <!-- Mandatory -->
     <label>Why do you want to join the team? *</label>
     <textarea id="reason" rows="4" required></textarea>
 
-    <!-- Mandatory -->
-    <label>
-      <input type="checkbox" id="confirmInfo" required>
-      I confirm that all the information provided is true *
-    </label>
-
-    <label>
-      <input type="checkbox" id="agreeRules" required>
-      I agree to follow team rules and regulations *
-    </label>
-
-    <label>
-      <input type="checkbox" id="financialResponsibility" required>
-      I agree to take financial responsibility for team dues, kit, fines, and agreed contributions *
-    </label>
+    <label><input type="checkbox" id="confirmInfo" required> I confirm all information is correct *</label>
+    <label><input type="checkbox" id="agreeRules" required> I agree to follow team rules *</label>
+    <label><input type="checkbox" id="financialResponsibility" required> I agree to take financial responsibility *</label>
 
     <button type="submit">Submit Registration</button>
-
     <div class="success" id="successMessage"></div>
 
   </form>
 </div>
 
-<!-- Firebase Script -->
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -220,11 +139,8 @@ form.addEventListener("submit", async (e) => {
 
   document.getElementById("successMessage").innerText =
     "Registration submitted successfully!";
-
   form.reset();
 });
-
 </script>
-
 </body>
-  </html>
+</html>
