@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CPE Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background: #2c3e50;
+      color: white;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin: 2px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .approve { background: green; color: white; }
+    .reject { background: red; color: white; }
+  </style>
+</head>
+
+<body>
+
+<h1>CPE Girls Team Dashboard</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Position</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="playersTable"></tbody>
+</table>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "historyhub-4cfda.firebaseapp.com",
+  projectId: "historyhub-4cfda",
+  storageBucket: "historyhub-4cfda.firebasestorage.app",
+  messagingSenderId: "422922716352",
+  appId: "1:422922716352:web:178b0a0f81d6bd94829925"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "admin-login.html";
+  } else {
+    loadPlayers();
+  }
+});
+
+async function loadPlayers() {
+  const querySnapshot = await getDocs(collection(db, "CP_Girls_Team_Registrations"));
+  const table = document.getElementById("playersTable");
+  table.innerHTML = "";
+
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const status = data.status || "Pending";
+
+    const row = `
+      <tr>
+        <td>${data.fullname}</td>
+        <td>${data.age}</td>
+        <td>${data.position}</td>
+        <td>${status}</td>
+        <td>
+          <button class="approve" onclick="updateStatus('${docSnap.id}', 'Approved')">Approve</button>
+          <button class="reject" onclick="updateStatus('${docSnap.id}', 'Rejected')">Reject</button>
+        </td>
+      </tr>
+    `;
+
+    table.innerHTML += row;
+  });
+}
+
+window.updateStatus = async function(id, newStatus) {
+  const playerRef = doc(db, "CP_Girls_Team_Registrations", id);
+  await updateDoc(playerRef, { status: newStatus });
+  loadPlayers();
+};
+
+</script>
+
+</body>
+</html>
