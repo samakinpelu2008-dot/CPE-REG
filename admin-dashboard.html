@@ -4,40 +4,15 @@
   <title>CPE Admin Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial;
-      background: #f4f6f9;
-      padding: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background: #2c3e50;
-      color: white;
-    }
-
-    button {
-      padding: 5px 10px;
-      margin: 2px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .approve { background: green; color: white; }
-    .reject { background: red; color: white; }
+    body { font-family: Arial; background:#f4f6f9; padding:20px; margin:0; }
+    table { width:100%; border-collapse:collapse; background:white; }
+    th, td { padding:10px; border:1px solid #ddd; }
+    th { background:#2c3e50; color:white; }
+    button { padding:5px 10px; margin:2px; border:none; cursor:pointer; border-radius:4px; }
+    .approve { background:green; color:white; }
+    .reject { background:red; color:white; }
   </style>
 </head>
-
 <body>
 
 <h1>CPE Girls Team Dashboard</h1>
@@ -56,13 +31,12 @@
 </table>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyD0P7scCvlcPPPIACYE1nS4-Gmy27ophuM",
   authDomain: "historyhub-4cfda.firebaseapp.com",
   projectId: "historyhub-4cfda",
   storageBucket: "historyhub-4cfda.firebasestorage.app",
@@ -113,7 +87,6 @@ window.updateStatus = async function(id, newStatus) {
   await updateDoc(playerRef, { status: newStatus });
   loadPlayers();
 };
-
 </script>
 
 </body>
