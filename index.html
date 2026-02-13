@@ -3,6 +3,11 @@
 <head>
   <title>CP Girls Team Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2c3e50">
+
   <style>
     body {
       font-family: Arial;
@@ -58,7 +63,7 @@
   <input type="number" name="age" placeholder="Age" required>
   <input type="text" name="phone" placeholder="Phone Number" required>
   <input type="email" name="email" placeholder="Email">
-  
+
   <input type="text" name="position" placeholder="Main Position" required>
   <input type="text" name="secondaryPosition" placeholder="Secondary Position">
 
@@ -130,18 +135,23 @@ form.addEventListener("submit", async (e) => {
       createdAt: new Date()
     });
 
-    alert("✅ Your request has been sent successfully!");
-
+    alert("Your request has been sent successfully!");
     form.reset();
 
   } catch (error) {
-    alert("❌ Something went wrong. Check console.");
+    alert("Something went wrong.");
     console.error(error);
   }
 
   submitBtn.innerText = "Submit";
   submitBtn.disabled = false;
 });
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
 </script>
 
 </body>
