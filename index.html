@@ -1,158 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>CP Girls Team Registration</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syrix Tech Lab | Home</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: white; }
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2c3e50">
+        /* LAYER 1: Background Image */
+        .background-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* THIS IS THE EXACT FILENAME FROM YOUR UPLOAD */
+            background-image: url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f6f9;
-      padding: 20px;
-      margin: 0;
-    }
+        /* LAYER 2: 3D Gun Canvas */
+        #webgl-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
 
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
+        /* LAYER 3: UI Overlay */
+        .ui-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 20px; z-index: 2; pointer-events: none; box-sizing: border-box;
+        }
+        .ui-overlay * { pointer-events: auto; }
 
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: auto;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #2c3e50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: gray;
-    }
-  </style>
+        .top-nav { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.4); padding: 15px 25px; border-radius: 12px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .currency-bar { display: flex; gap: 20px; font-weight: bold; }
+        .action-deck { display: flex; justify-content: center; gap: 30px; margin-bottom: 50px; }
+        .mode-btn { padding: 20px 60px; background: rgba(0, 150, 255, 0.3); border: 2px solid #00d4ff; color: white; cursor: pointer; font-weight: bold; border-radius: 10px; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 10px; font-size: 1.2rem; }
+        .bottom-nav { display: flex; justify-content: center; gap: 20px; }
+        .nav-btn { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.2); padding: 15px 30px; color: white; cursor: pointer; border-radius: 10px; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    </style>
 </head>
 <body>
 
-<h1>CP Girls Team Registration</h1>
+    <div class="background-layer"></div>
+    <canvas id="webgl-canvas"></canvas>
 
-<form id="registrationForm">
-  <input type="text" name="fullname" placeholder="Full Name" required>
-  <input type="number" name="age" placeholder="Age" required>
-  <input type="text" name="phone" placeholder="Phone Number" required>
-  <input type="email" name="email" placeholder="Email">
+    <div class="ui-overlay">
+        <header class="top-nav">
+            <div>👤 PlayerOne | LV 24</div>
+            <div class="currency-bar">
+                <span>🪙 1,200</span> <span>💎 45</span> <span>🎟️ 10</span>
+            </div>
+        </header>
 
-  <input type="text" name="position" placeholder="Main Position" required>
-  <input type="text" name="secondaryPosition" placeholder="Secondary Position">
+        <main class="action-deck">
+            <button class="mode-btn"><i data-lucide="play"></i> 1 v 1</button>
+            <button class="mode-btn"><i data-lucide="trending-up"></i> LV MODE</button>
+        </main>
 
-  <select name="foot" required>
-    <option value="">Preferred Foot</option>
-    <option>Right</option>
-    <option>Left</option>
-    <option>Both</option>
-  </select>
+        <footer class="bottom-nav">
+            <button class="nav-btn"><i data-lucide="shopping-cart"></i> STORE</button>
+            <button class="nav-btn"><i data-lucide="crosshair"></i> WEAPONS</button>
+            <button class="nav-btn"><i data-lucide="user"></i> CHARACTERS</button>
+            <button class="nav-btn"><i data-lucide="settings"></i> SETTINGS</button>
+        </footer>
+    </div>
 
-  <input type="text" name="height" placeholder="Height (e.g 5'6)" required>
-
-  <select name="weeklyTraining" required>
-    <option value="">Can Attend Weekly Training?</option>
-    <option>Yes</option>
-    <option>No</option>
-  </select>
-
-  <select name="weekendMatches" required>
-    <option value="">Available For Weekend Matches?</option>
-    <option>Yes</option>
-    <option>No</option>
-  </select>
-
-  <textarea name="reason" placeholder="Why do you want to join?" required></textarea>
-
-  <button type="submit" id="submitBtn">Submit</button>
-</form>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD0P7scCvlcPPPIACYE1nS4-Gmy27ophuM",
-  authDomain: "historyhub-4cfda.firebaseapp.com",
-  projectId: "historyhub-4cfda",
-  storageBucket: "historyhub-4cfda.firebasestorage.app",
-  messagingSenderId: "422922716352",
-  appId: "1:422922716352:web:178b0a0f81d6bd94829925"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const form = document.getElementById("registrationForm");
-const submitBtn = document.getElementById("submitBtn");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  submitBtn.innerText = "Sending...";
-  submitBtn.disabled = true;
-
-  try {
-    await addDoc(collection(db, "CP_Girls_Team_Registrations"), {
-      fullname: form.fullname.value,
-      age: form.age.value,
-      phone: form.phone.value,
-      email: form.email.value,
-      position: form.position.value,
-      secondaryPosition: form.secondaryPosition.value,
-      foot: form.foot.value,
-      height: form.height.value,
-      weeklyTraining: form.weeklyTraining.value,
-      weekendMatches: form.weekendMatches.value,
-      reason: form.reason.value,
-      status: "Pending",
-      createdAt: new Date()
-    });
-
-    alert("Your request has been sent successfully!");
-    form.reset();
-
-  } catch (error) {
-    alert("Something went wrong.");
-    console.error(error);
-  }
-
-  submitBtn.innerText = "Submit";
-  submitBtn.disabled = false;
-});
-</script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
-</script>
-
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
