@@ -1,8 +1,21 @@
 {
-  "name": "CP Girls Team",
-  "short_name": "CP Team",
+  "name": "Syrix Tech Lab",
+  "short_name": "Syrix",
   "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#f4f6f9",
-  "theme_color": "#2c3e50"
+  "display": "fullscreen",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
