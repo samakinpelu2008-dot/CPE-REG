@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Syrix Tech Lab | Home</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#000000">
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: white; }
@@ -11,7 +18,6 @@
         /* LAYER 1: Background Image */
         .background-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* THIS IS THE EXACT FILENAME FROM YOUR UPLOAD */
             background-image: url('images/IMG-20260626-WA0122.jpg');
             background-size: cover;
             background-position: center;
@@ -67,7 +73,17 @@
     </div>
 
     <script>
+        // Initialize Lucide Icons
         lucide.createIcons();
+
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered!'))
+                    .catch(err => console.log('Service Worker failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
